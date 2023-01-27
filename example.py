@@ -40,16 +40,19 @@ def main():
     cubeVertices = data['vertices']
     cubeEdges = data['edges']
     cube = mesh(cubeVertices, cubeEdges)
-    #initalize pygame
+
+    #initalize 4D engine
+    main = engine()
+    cam = camera()
+
+    # initalize pygame
     pg.init()
     screen = pg.display.set_mode((1920, 1080), pg.FULLSCREEN)
     pygame.display.set_caption('4D Wireframe')
-    #initalize 4D engine
-    main = engine(screen)
-    cam = camera()
+
     while True:
         keys(cube)
-        main.update([cube], cam)
+        main.update(screen, [cube], cam)
 
 if __name__ == '__main__':
     main()

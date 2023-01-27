@@ -7,9 +7,8 @@ import json
 
 
 class engine:
-    def __init__(self, screen: pygame.Surface,
+    def __init__(self,
                  drawEdges: bool = 1, drawVertices: bool = 1, debug: bool = 0, ):
-        self.screen = screen
 
         self.debug = debug
         self.drawEdges = drawEdges
@@ -20,8 +19,8 @@ class engine:
                 pygame.font.init()
             self.font1 = pygame.font.SysFont('freesanbold.ttf', 50)
 
-    def update(self, objects: list, camera):
-        self.render(objects, camera)
+    def update(self, screen: pygame.Surface, objects: list, camera):
+        self.render(screen, objects, camera)
 
     def renderDebug(self):
         self.last = self.now
@@ -33,8 +32,8 @@ class engine:
         self.screen.blit(fps, fpsRect)
 
 
-    def render(self, objects, cam):
-        self.screen.fill([0, 0, 0])
+    def render(self, screen: pygame.Surface, objects, cam):
+        screen.fill([0, 0, 0])
 
         for object in objects:
             vertices, edges, color = object.render()
@@ -47,10 +46,10 @@ class engine:
 
             if self.drawEdges:
                 for i in edges:
-                    pg.draw.line(self.screen, (0, 255, 0), points[i[0]] * self.screen.get_width(), points[i[1]] * self.screen.get_width())
+                    pg.draw.line(screen, (0, 255, 0), points[i[0]] * screen.get_width(), points[i[1]] * screen.get_width())
             if self.drawVertices:
                 for i in points:
-                    pg.draw.circle(self.screen, color, i * self.screen.get_width(), 4)
+                    pg.draw.circle(screen, color, i * screen.get_width(), 4)
 
         if self.debug:
             self.renderDebug()
