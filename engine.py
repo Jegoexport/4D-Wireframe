@@ -8,11 +8,13 @@ import json
 
 class engine:
     def __init__(self,
-                 drawEdges: bool = 1, drawVertices: bool = 1, debug: bool = 0, ):
+                 drawEdges: bool = 1, drawVertices: bool = 1, debug: bool = 1, limitFps: int = 0):
 
         self.debug = debug
         self.drawEdges = drawEdges
         self.drawVertices = drawVertices
+        self.limitFps = limitFps
+
         if debug:
             self.now = time.time()
             if not pygame.font.get_init():
@@ -22,14 +24,21 @@ class engine:
     def update(self, screen: pygame.Surface, objects: list, camera):
         self.render(screen, objects, camera)
 
-    def renderDebug(self):
+    def renderDebug(self, screen):
         self.last = self.now
         self.now = time.time()
-        self.fps = round(1/(self.now - self.last))
+        self.timeDelta =self.now - self.last
+        self.fps = round(1/self.timeDelta)
+        for task in debugtask:
+            pass
         fps = self.font1.render(str(self.fps), True, (255, 255, 255) if self.fps > 30 else (255, 0, 0))
         fpsRect = fps.get_rect()
         fpsRect.center = (30, 20)
-        self.screen.blit(fps, fpsRect)
+        screen.blit(fps, fpsRect)
+        if self.limitFps:
+            limitFps = 1 / self.limitFps
+            if limitFps > self.timeDelta:
+                time.sleep(limitFps - self.timeDelta)
 
 
     def render(self, screen: pygame.Surface, objects, cam):
@@ -52,8 +61,7 @@ class engine:
                     pg.draw.circle(screen, color, i * screen.get_width(), 4)
 
         if self.debug:
-            self.renderDebug()
-
+            self.renderDebug(screen)
         pg.display.flip()
 
     def projection(self, faceNormal, rayDirection, rayPoint, vert, scale, epsilon=1e-6):

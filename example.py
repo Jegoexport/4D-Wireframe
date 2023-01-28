@@ -1,6 +1,9 @@
 from engine import *
+import numpy as np
 
-degree = 0.017453292519943295
+degree = 0.0017453292519943296 # .1 degrees
+rotation = np.array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+
 
 def keys(cube):
     for event in pg.event.get():
@@ -10,49 +13,50 @@ def keys(cube):
                 exit()
 
             if event.key == pg.K_a:
-                cube.rotate(np.array([degree, 0, 0, 0, 0, 0]))
+                rotation[0] += degree
             if event.key == pg.K_d:
-                cube.rotate(np.array([-degree, 0, 0, 0, 0, 0]))
+                rotation[0] -= degree
 
             if event.key == pg.K_s:
-                cube.rotate(np.array([0, degree, 0, 0, 0, 0]))
+                rotation[1] += degree
             if event.key == pg.K_w:
-                cube.rotate(np.array([0, -degree, 0, 0, 0, 0]))
+                rotation[1] -= degree
 
             if event.key == pg.K_q:
-                cube.rotate(np.array([0, 0, degree, 0, 0, 0]))
+                rotation[2] += degree
             if event.key == pg.K_e:
-                cube.rotate(np.array([0, 0, -degree, 0, 0, 0]))
+                rotation[2] -= degree
 
             if event.key == pg.K_r:
-                cube.rotate(np.array([0, 0, 0, degree, 0, 0]))
+                rotation[3] += degree
             if event.key == pg.K_f:
-                cube.rotate(np.array([0, 0, 0, -degree, 0, 0]))
+                rotation[3] -= degree
 
             if event.key == pg.K_p:
                 setattr(cube, 'rotation', np.array([0, 0, 0, 0, 0, 0]))
 
-
 def main():
-    #load object from json
+    # load object from json
     with open('exampleObject.json') as f:
         data = json.load(f)
     cubeVertices = data['vertices']
     cubeEdges = data['edges']
     cube = mesh(cubeVertices, cubeEdges)
 
-    #initalize 4D engine
-    main = engine()
+    # initialize 4D engine
+    eng = engine()
     cam = camera()
 
-    # initalize pygame
+    # initialize pygame
     pg.init()
     screen = pg.display.set_mode((1920, 1080), pg.FULLSCREEN)
     pygame.display.set_caption('4D Wireframe')
 
     while True:
+        cube.rotate(rotation)
         keys(cube)
-        main.update(screen, [cube], cam)
+        eng.update(screen, [cube], cam)
+
 
 if __name__ == '__main__':
     main()
