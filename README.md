@@ -6,4 +6,4 @@ renders Wireframe of 4d objects
  - numpy
 
 ##Usage
-Run the example.py script
+Run the example.py script.
